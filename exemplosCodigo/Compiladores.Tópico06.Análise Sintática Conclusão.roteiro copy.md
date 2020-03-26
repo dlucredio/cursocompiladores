@@ -114,15 +114,6 @@ public class AlgumaParser {
         }
     }
 
-    void match(TipoToken tipo, String lexema) {
-        if (lookahead(1).nome == tipo && lookahead(1).lexema.equals(lexema)) {
-            System.out.println("Match: " + lookahead(1));
-            lerToken();
-        } else {
-            erroSintatico(lexema);
-        }
-    }
-
     Token lookahead(int k) {
         if (bufferTokens.isEmpty()) {
             return null;
@@ -153,10 +144,10 @@ public class AlgumaParser {
     //programa : ':' 'DECLARACOES' listaDeclaracoes ':' 'ALGORITMO' listaComandos;
     public void programa() {
         match(TipoToken.Delim);
-        match(TipoToken.PalavraChave, "DECLARACOES");
+        match(TipoToken.PCDeclaracoes);
         listaDeclaracoes();
         match(TipoToken.Delim);
-        match(TipoToken.PalavraChave, "ALGORITMO");
+        match(TipoToken.PCAlgoritmo);
         listaComandos();
         match(TipoToken.Fim);
     }
@@ -186,9 +177,9 @@ public class AlgumaParser {
     //tipoVar : 'INTEIRO' | 'REAL';
     void tipoVar() {
         if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("INTEIRO")) {
-            match(TipoToken.PalavraChave, "INTEIRO");
+            match(TipoToken.PCInteiro);
         } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("REAL")) {
-            match(TipoToken.PalavraChave, "REAL");
+            match(TipoToken.PCReal);
         } else {
             erroSintatico("INTEIRO","REAL");
         }
@@ -330,9 +321,9 @@ public class AlgumaParser {
     //operadorBooleano : 'E' | 'OU';
     void operadorBooleano() {
         if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("E")) {
-            match(TipoToken.PalavraChave, "E");
+            match(TipoToken.PCE);
         } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("OU")) {
-            match(TipoToken.PalavraChave, "OU");
+            match(TipoToken.PCOu);
         } else {
             erroSintatico("E","OU");
         }
@@ -347,12 +338,12 @@ public class AlgumaParser {
     }
 
     void listaComandosSubRegra1() {
-        if (lookahead(1).nome == TipoToken.PalavraChave && (lookahead(1).lexema.equals("ATRIBUIR")
-                || lookahead(1).lexema.equals("LER")
-                || lookahead(1).lexema.equals("IMPRIMIR")
-                || lookahead(1).lexema.equals("SE")
-                || lookahead(1).lexema.equals("ENQUANTO")
-                || lookahead(1).lexema.equals("INICIO"))) {
+        if (lookahead(1).nome == TipoToken.PCAtribuir ||
+        lookahead(1).nome == TipoToken.PCLer ||
+        lookahead(1).nome == TipoToken.PCImprimir ||
+        lookahead(1).nome == TipoToken.PCSe ||
+        lookahead(1).nome == TipoToken.PCEnquanto ||
+        lookahead(1).nome == TipoToken.PCInicio) {
             listaComandos();
         } else {
             // vazio
@@ -361,17 +352,17 @@ public class AlgumaParser {
 
     //comando : comandoAtribuicao | comandoEntrada | comandoSaida | comandoCondicao | comandoRepeticao | subAlgoritmo;
     void comando() {
-        if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("ATRIBUIR")) {
+        if (lookahead(1).nome == TipoToken.PCAtribuir) {
             comandoAtribuicao();
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("LER")) {
+        } else if (lookahead(1).nome == TipoToken.PCLer) {
             comandoEntrada();
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("IMPRIMIR")) {
+        } else if (lookahead(1).nome == TipoToken.PCImprimir) {
             comandoSaida();
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("SE")) {
+        } else if (lookahead(1).nome == TipoToken.PCSe) {
             comandoCondicao();
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("ENQUANTO")) {
+        } else if (lookahead(1).nome == TipoToken.PCEnquanto) {
             comandoRepeticao();
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("INICIO")) {
+        } else if (lookahead(1).nome == TipoToken.PCInicio) {
             subAlgoritmo();
         } else {
             erroSintatico("ATRIBUIR","LER","IMPRIMIR","SE","ENQUANTO","INICIO");
@@ -380,21 +371,21 @@ public class AlgumaParser {
 
     //comandoAtribuicao : 'ATRIBUIR' expressaoAritmetica 'A' VARIAVEL;
     void comandoAtribuicao() {
-        match(TipoToken.PalavraChave, "ATRIBUIR");
+        match(TipoToken.PCAtribuir);
         expressaoAritmetica();
-        match(TipoToken.PalavraChave, "A");
+        match(TipoToken.PCA);
         match(TipoToken.Var);
     }
 
     //comandoEntrada : 'LER' VARIAVEL;
     void comandoEntrada() {
-        match(TipoToken.PalavraChave, "LER");
+        match(TipoToken.PCLer);
         match(TipoToken.Var);
     }
 
     //comandoSaida : 'IMPRIMIR'  (VARIAVEL | CADEIA);
     void comandoSaida() {
-        match(TipoToken.PalavraChave, "IMPRIMIR");
+        match(TipoToken.PCImprimir);
         comandoSaidaSubRegra1();
     }
 
@@ -412,16 +403,16 @@ public class AlgumaParser {
     // fatorar à esquerda
     // comandoCondicao : 'SE' expressaoRelacional 'ENTAO' comando ('SENAO' comando | <<vazio>>)
     void comandoCondicao() {
-        match(TipoToken.PalavraChave, "SE");
+        match(TipoToken.PCSe);
         expressaoRelacional();
-        match(TipoToken.PalavraChave, "ENTAO");
+        match(TipoToken.PCEntao);
         comando();
         comandoCondicaoSubRegra1();
     }
 
     void comandoCondicaoSubRegra1() {
-        if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("SENAO")) {
-            match(TipoToken.PalavraChave, "SENAO");
+        if (lookahead(1).nome == TipoToken.PCSenao) {
+            match(TipoToken.PCSenao);
             comando();
         } else {
             // vazio
@@ -430,16 +421,16 @@ public class AlgumaParser {
 
     //comandoRepeticao : 'ENQUANTO' expressaoRelacional comando;
     void comandoRepeticao() {
-        match(TipoToken.PalavraChave, "ENQUANTO");
+        match(TipoToken.PCEnquanto);
         expressaoRelacional();
         comando();
     }
 
     //subAlgoritmo : 'INICIO' listaComandos 'FIM';
     void subAlgoritmo() {
-        match(TipoToken.PalavraChave, "INICIO");
+        match(TipoToken.PCInicio);
         listaComandos();
-        match(TipoToken.PalavraChave, "FIM");
+        match(TipoToken.PCFim);
     }
 ```
 
