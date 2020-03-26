@@ -176,9 +176,9 @@ public class AlgumaParser {
 
     //tipoVar : 'INTEIRO' | 'REAL';
     void tipoVar() {
-        if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("INTEIRO")) {
+        if (lookahead(1).nome == TipoToken.PCInteiro) {
             match(TipoToken.PCInteiro);
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("REAL")) {
+        } else if (lookahead(1).nome == TipoToken.PCReal) {
             match(TipoToken.PCReal);
         } else {
             erroSintatico("INTEIRO","REAL");
@@ -273,7 +273,7 @@ public class AlgumaParser {
     }
 
     void expressaoRelacional2() {
-        if (lookahead(1).nome == TipoToken.PalavraChave && (lookahead(1).lexema.equals("E") || lookahead(1).lexema.equals("OU"))) {
+        if (lookahead(1).nome == TipoToken.PCE || lookahead(1).nome == TipoToken.PCOu) {
             operadorBooleano();
             termoRelacional();
             expressaoRelacional2();
@@ -320,9 +320,9 @@ public class AlgumaParser {
 
     //operadorBooleano : 'E' | 'OU';
     void operadorBooleano() {
-        if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("E")) {
+        if (lookahead(1).nome == TipoToken.PCE) {
             match(TipoToken.PCE);
-        } else if (lookahead(1).nome == TipoToken.PalavraChave && lookahead(1).lexema.equals("OU")) {
+        } else if (lookahead(1).nome == TipoToken.PCOu) {
             match(TipoToken.PCOu);
         } else {
             erroSintatico("E","OU");
