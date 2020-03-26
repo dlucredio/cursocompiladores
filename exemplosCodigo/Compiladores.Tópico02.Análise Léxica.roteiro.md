@@ -1,5 +1,5 @@
 # Construção de Compiladores - Daniel Lucrédio, Helena Caseli, Mário César San Felice e Murilo Naldi
-## Tópico 01 - Análise Léxica - Exemplos
+## Tópico 02 - Análise Léxica - Exemplos
 
 ### Demonstração 1 – Analisador léxico “na mão” – parte 1
 
