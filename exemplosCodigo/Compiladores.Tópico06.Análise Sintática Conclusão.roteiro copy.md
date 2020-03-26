@@ -273,7 +273,7 @@ public class AlgumaParser {
     }
 
     void expressaoRelacional2() {
-        if (lookahead(1).nome == TipoToken.PCE || lookahead(1).nome == TipoToken.PCOu) {
+        if (lookahead(1).nome == TipoToken.OpBoolE || lookahead(1).nome == TipoToken.OpBoolOu) {
             operadorBooleano();
             termoRelacional();
             expressaoRelacional2();
@@ -320,10 +320,10 @@ public class AlgumaParser {
 
     //operadorBooleano : 'E' | 'OU';
     void operadorBooleano() {
-        if (lookahead(1).nome == TipoToken.PCE) {
-            match(TipoToken.PCE);
-        } else if (lookahead(1).nome == TipoToken.PCOu) {
-            match(TipoToken.PCOu);
+        if (lookahead(1).nome == TipoToken.OpBoolE) {
+            match(TipoToken.OpBoolE);
+        } else if (lookahead(1).nome == TipoToken.OpBoolOu) {
+            match(TipoToken.OpBoolOu);
         } else {
             erroSintatico("E","OU");
         }
