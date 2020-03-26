@@ -519,7 +519,7 @@ public class Principal {
 </project>
 ```
 
-3. Criar um novo arquivo do tipo ANTLR Grammar, chamado Alguma.g4
+3. Criar um novo arquivo do tipo ANTLR Grammar, chamado ```Alguma.g4```
 
 - O plugin ANTLR-Maven exige que o arquivo com a gramática seja incluído em um diretório específico dentro da pasta src/main do projeto. Esse diretório só pode ser criado na aba “arquivos/files” do NetBeans. Esse diretório deve se chamar “antlr4” e deve ter a mesma estrutura de diretórios que os pacotes Java. A figura a seguir ilustra o local exato onde deve ser criado o arquivo. Observe que é necessário alternar para a aba “arquivos/files” (topo da imagem):
 

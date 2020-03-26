@@ -7,3 +7,4 @@ Neste repositório encontram-se os materiais didáticos da disciplina Construç�
 - [Notas de aula](notasDeAula)
 - [Exemplos de código](exemplosCodigo)
 - [Listas de exercícios](listasDeExercicios)
+- [P-code machine](pCodeMachine)
