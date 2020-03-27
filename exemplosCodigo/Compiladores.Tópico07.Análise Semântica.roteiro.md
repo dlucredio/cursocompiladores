@@ -840,7 +840,7 @@ public class AlgumaSemantico extends AlgumaBaseVisitor<Void> {
                 AlgumaSemanticoUtils.adicionarErroSemantico(ctx.VARIAVEL().getSymbol(), "Variável " + nomeVar + " não foi declarada antes do uso");
             } else {
                 TipoAlguma tipoVariavel = AlgumaSemanticoUtils.verificarTipo(tabela, nomeVar);
-                if (tipoVariavel != tipoExpressao && tipoExpressao != TipoAlguma.INVALIDO) {
+                if (tipoVariavel != tipoExpressao) {
                     AlgumaSemanticoUtils.adicionarErroSemantico(ctx.VARIAVEL().getSymbol(), "Tipo da variável " + nomeVar + " não é compatível com o tipo da expressão");
                 }
             }
@@ -886,7 +886,7 @@ public class Principal {
         ProgramaContext arvore = parser.programa();
         AlgumaSemantico as = new AlgumaSemantico();
         as.visitPrograma(arvore);
-        AnalisadorSemanticoUtils.errosSemanticos.forEach((s) -> System.out.println(s));
+        AlgumaSemanticoUtils.errosSemanticos.forEach((s) -> System.out.println(s));
     }
 }
 ```
