@@ -28,7 +28,6 @@ SENAO
             ATRIBUIR aux + 1 A aux
          FIM
    FIM
-FIMSE
 IMPRIMIR 'O resultado é:'
 IMPRIMIR resultado
 ```
