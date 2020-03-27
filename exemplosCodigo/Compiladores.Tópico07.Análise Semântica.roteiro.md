@@ -374,9 +374,7 @@ public class TabelaDeSimbolos {
     }
 
     public EntradaTabelaDeSimbolos verificar(String nome) {
-        if(!tabelaDeSimbolos.containsKey(nome))
-            return null;
-        else return tabelaDeSimbolos.get(nome);
+        return tabelaDeSimbolos.get(nome);
     }
 }
 ```
@@ -402,7 +400,7 @@ public class Escopos {
         pilhaDeTabelas.push(new TabelaDeSimbolos());
     }
 
-    public TabelaDeSimbolos pegarEscopoAtual() {
+    public TabelaDeSimbolos obterEscopoAtual() {
         return pilhaDeTabelas.peek();
     }
 
