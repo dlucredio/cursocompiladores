@@ -506,7 +506,7 @@ public class Calculador extends ExpressoesBaseVisitor<Double> {
 
     @Override
     public Double visitDecl(ExpressoesParser.DeclContext ctx) {
-        TabelaDeSimbolos escopoAtual = escoposAninhados.pegarEscopoAtual();
+        TabelaDeSimbolos escopoAtual = escoposAninhados.obterEscopoAtual();
         if (escopoAtual.verificar(ctx.nome.getText()) != null) {
             throw new RuntimeException("Erro semântico: " + ctx.nome.getText()
                     + " declarada duas vezes num mesmo escopo");
