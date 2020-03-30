@@ -1058,7 +1058,7 @@ ExpressaoRelacional : termo1=TermoRelacional outrosTermos+=OutroTermoRelacional*
 OutroTermoRelacional : operador=OpBool termo=TermoRelacional;
 TermoRelacional : TermoComparacaoRelacional | TermoSubExpressaoRelacional;
 TermoComparacaoRelacional: exp1=ExpressaoAritmetica opRel=OpRel exp2=ExpressaoAritmetica;
-TermoSubExpressaoRelacional: '[' expRel=ExpressaoRelacional ']';`
+TermoSubExpressaoRelacional: '[' expRel=ExpressaoRelacional ']';
 Comando : ComandoAtribuicao | ComandoEntrada | ComandoSaida | ComandoCondicao | ComandoRepeticao | SubAlgoritmo;
 ComandoAtribuicao : 'ATRIBUIR' exp=ExpressaoAritmetica 'A' variavel=[Declaracao];
 ComandoEntrada : 'LER' variavel=[Declaracao];
