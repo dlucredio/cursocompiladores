@@ -8,3 +8,4 @@ Neste repositório encontram-se os materiais didáticos da disciplina Construç�
 - [Exemplos de código](exemplosCodigo)
 - [Listas de exercícios](listasDeExercicios)
 - [P-code machine](pCodeMachine)
+- [Compiladores feitos por alunos](projetos/README.md)
