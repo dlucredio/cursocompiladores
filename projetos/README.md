@@ -1,5 +1,6 @@
 Algumas ideias já executadas por alunos em outras ofertas da disciplina:
 
+1. [Linguagem de simulação de batalha envolvendo um aliado e um inimigo](https://github.com/Ad3nnors/Compiladores-T6)
 1. [Linguagem findinator, para escrever comando "find" em linguagem natural](https://github.com/VitorDonadelli/compiladores/tree/main/T6)
 1. [Linguagem para um modelo simplificado de uma batalha Pokemon](https://github.com/amandapmn/compiladores_2021/tree/main/Trab4)
 1. [Linguagem para geração de cumpom fiscal](https://github.com/FernandoSNunes/Trab-Compiladores/tree/main/T4)
