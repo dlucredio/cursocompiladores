@@ -1,5 +1,14 @@
-Algumas ideias já executadas por alunos em outras ofertas da disciplina:
+Algumas ideias já executadas por alunos em outras ofertas da disciplina (Obs: nem todas essas foram executadas com perfeição, e algumas tiraram notas baixas. Portanto ao utilizar como inspiração tenha um pouco de senso crítico):
 
+1. [Linguagem para criar questionários](https://github.com/gabriel-roza/projeto_questionario)
+1. [Linguagem para cálculos de receitas de Minecraft usando um theorem prover](https://github.com/migeyel/t6-compiladores)
+1. [Linguagem para banco de dados simplificada em português](https://github.com/matheusporto/tabelaSimples/tree/main/tabelaSimples-master)
+1. [Linguagem para simular comandos de Minecraft](https://github.com/LucasVD23/Linguagem_Terminal_Minecraft)
+1. [Linguagem para batalhas de Pokemons](https://github.com/Lucas-Cid/T6-compiladores)
+1. [Linguagem para definição de tarefas](https://github.com/LCRERGO/TADLang)
+1. [Linguagem para definição de receitas culinárias](https://github.com/linneu1997/Compiladores-T6)
+1. [Linguagem para estruturação de obras literárias](https://github.com/GuilhermeSGodoy/Construcao-Compiladores/tree/main/T6)
+1. [Linguagem para geração de comandos TAR](https://github.com/VLx2000/t6-compiladores)
 1. [Linguagem de simulação de batalha envolvendo um aliado e um inimigo](https://github.com/Ad3nnors/Compiladores-T6)
 1. [Linguagem findinator, para escrever comando "find" em linguagem natural](https://github.com/VitorDonadelli/compiladores/tree/main/T6)
 1. [Linguagem para um modelo simplificado de uma batalha Pokemon](https://github.com/amandapmn/compiladores_2021/tree/main/Trab4)
