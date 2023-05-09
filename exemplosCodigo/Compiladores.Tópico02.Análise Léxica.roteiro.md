@@ -7,7 +7,7 @@ Primeira tentativa de fazer análise léxica: lendo tokens de 1 caractere (ou no
 
 ---
 
-1. Criar um novo arquivo, no Desktop, com um programa de exemplo (salvar com codificação ocidental)
+1. Criar um novo arquivo, no Desktop, com um programa de exemplo (salvar com codificação utf8)
 
 ```
 :DECLARACOES
@@ -28,10 +28,16 @@ IMPRIMIR fatorial
 ```
 
 2. Abrir o NetBeans, e criar novo projeto Java (com Ant) “AlgumaLex”
-3. Criar um enum algumalex.TipoToken
+- Alternativamente, crie um projeto com Maven:
+
+```sh
+mvn archetype:generate "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.4"
+```
+
+3. Criar um enum TipoToken
 
 ```java
-package algumalex;
+package br.ufscar.dc.algumalex;
 public enum TipoToken {
     PCDeclaracoes, PCAlgoritmo, PCInteiro, PCReal, PCAtribuir, PCA, PCLer,
     PCImprimir, PCSe, PCEntao, PCEnquanto, PCInicio, PCFim,
@@ -43,10 +49,10 @@ public enum TipoToken {
 }
 ```
 
-4. Criar a classe algumalex.Token
+4. Criar a classe Token
 
 ```java
-package algumalex;
+package br.ufscar.dc.algumalex;
 public class Token {
     public TipoToken nome;
     public String lexema;
@@ -62,10 +68,11 @@ public class Token {
 }
 ```
 
-5. Criar a classe algumalex.LeitorDeArquivosTexto
+5. Criar a classe LeitorDeArquivosTexto
 
 ```java
-package algumalex;
+package br.ufscar.dc.algumalex;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -91,10 +98,11 @@ public class LeitorDeArquivosTexto {
 }
 ```
 
-6. Criar a classe algumalex.AlgumaLexico
+6. Criar a classe AlgumaLexico
 
 ```java
-package algumalex;
+package br.ufscar.dc.algumalex;
+
 public class AlgumaLexico {
     LeitorDeArquivosTexto ldat;
     public AlgumaLexico(String arquivo) {
@@ -111,14 +119,20 @@ public class AlgumaLexico {
 }
 ```
 
-7. Criar a classe algumalex.Main, com o seguinte código no main() e executar
+7. Criar a classe App, com o seguinte código no main() e executar
 
 ```java
+package br.ufscar.dc.algumalex;
+
+public class App {
+    public static void main(String[] args) {
         AlgumaLexico lex = new AlgumaLexico(args[0]);
         Token t = null;
-        while((t = lex.proximoToken()) != null) {
+        while ((t = lex.proximoToken()) != null) {
             System.out.print(t);
         }
+    }
+}
 ```
 
 - Este é um projeto Java com Ant. No NetBeans, esse tipo de projeto gera um arquivo .jar executável sempre que for construído. Na janela de Saída/output, será exibido o comando correto para sua execução. Exemplo:
@@ -129,6 +143,12 @@ public class AlgumaLexico {
 
 ```sh
 java -jar "/Users/daniellucredio/NetBeansProjects/AlgumaLex/dist/AlgumaLex.jar" /Users/daniellucredio/Desktop/teste.txt
+```
+
+- Caso tenha criado o projeto no Maven, para rodar basta executar o seguinte comando:
+
+```sh
+mvn exec:java "-Dexec.mainClass=br.ufscar.dc.algumalex.App" "-Dexec.args=C:\Users\dlucr\OneDrive\Desktop\entrada.txt"
 ```
 
 8. Adicionar na classe AlgumaLexico o código para os tokens com um único caractere e executar
@@ -291,7 +311,8 @@ Possibilitar a análise de diversos padrões “em cascata”
 2. Na classe LeitorDeArquivosTexto, fazer as seguintes modificações
 
 ```diff
-package algumalex;
+package br.ufscar.dc.algumalex;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -421,7 +442,8 @@ public class LeitorDeArquivosTexto {
 3. Criar o seguinte código na classe AlgumaLexico (deixar o método proximoToken por último)
 
 ```java
-package algumalex;
+package br.ufscar.dc.algumalex;
+
 public class AlgumaLexico {
     LeitorDeArquivosTexto ldat;
     public AlgumaLexico(String arquivo) {
@@ -736,75 +758,149 @@ public class AlgumaLexico {
 1. Mostrar o site do ANTLR (www.antlr.org). Nesta demonstração faremos a instalação pelo Maven
 2. Abrir o NetBeans e criar novo projeto Java Maven
 
-- Project name: ```alguma-lexico```
-- Group Id: ```br.ufscar.dc.compiladores```
+Ou executar o comando do maven manualmente:
+
+```sh
+mvn archetype:generate "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.4"
+```
+
+Define value for property 'groupId': br.ufscar.dc.compiladores
+Define value for property 'artifactId': alguma-lexico
+Define value for property 'version' 1.0-SNAPSHOT: :
+Define value for property 'package' br.ufscar.dc.compiladores: : br.ufscar.dc.compiladores.alguma.lexico
+
+
 - Modificar o arquivo pom.xml para incluir a dependência para o ANTLR e o plugin do ANTLR
 
-```xml
+```diff
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>br.ufscar.dc.compiladores</groupId>
     <artifactId>alguma-lexico</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+
+    <name>alguma-lexico</name>
+    <!-- FIXME change it to the project's website -->
+    <url>http://www.example.com</url>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.7.2</version>
-                <executions>
-                    <execution>
-                        <id>antlr</id>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>            
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-<mainClass>br.ufscar.dc.compiladores.alguma.lexico.Principal</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+
     <dependencies>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>4.7.2</version>
-            <classifier>complete</classifier>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
-    </dependencies>    
++        <dependency>
++            <groupId>org.antlr</groupId>
++            <artifactId>antlr4</artifactId>
++            <version>4.12.0</version>
++            <classifier>complete</classifier>
++        </dependency>
+    </dependencies>
+
+    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.antlr</groupId>
++                <artifactId>antlr4-maven-plugin</artifactId>
++                <version>4.12.0</version>
++                <executions>
++                    <execution>
++                        <id>antlr</id>
++                        <goals>
++                            <goal>antlr4</goal>
++                        </goals>
++                    </execution>
++                </executions>
++            </plugin>
++            <plugin>
++                <artifactId>maven-assembly-plugin</artifactId>
++                <configuration>
++                    <archive>
++                        <manifest>
++                            <mainClass>br.ufscar.dc.compiladores.alguma.lexico.Principal</mainClass>
++                        </manifest>
++                    </archive>
++                    <descriptorRefs>
++                        <descriptorRef>jar-with-dependencies</descriptorRef>
++                    </descriptorRefs>
++                </configuration>
++                <executions>
++                    <execution>
++                        <id>make-assembly</id>
++                        <phase>package</phase>
++                        <goals>
++                            <goal>single</goal>
++                        </goals>
++                    </execution>
++                </executions>
++            </plugin>
++        </plugins>
++
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be
+            moved to parent pom) -->
+            <plugins>
+                <!-- clean lifecycle, see
+                https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <!-- default lifecycle, jar packaging: see
+                https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <!-- site lifecycle, see
+                https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
 ```
 
-3. Criar um novo arquivo do tipo ANTLR Lexer Grammar, chamado AlgumaLexer.g4
-- O plugin ANTLR-Maven exige que o arquivo com a gramática seja incluído em um diretório específico dentro da pasta src/main do projeto. Esse diretório só pode ser criado na aba “arquivos/files” do NetBeans. Esse diretório deve se chamar “antlr4” e deve ter a mesma estrutura de diretórios que os pacotes Java. A figura a seguir ilustra o local exato onde deve ser criado o arquivo. Observe que é necessário alternar para a aba “arquivos/files” (topo da imagem):
+3. Criar um novo arquivo do tipo ANTLR Lexer Grammar, chamado `AlgumaLexer.g4`
+- O plugin ANTLR-Maven exige que o arquivo com a gramática seja incluído em um diretório específico dentro da pasta src/main do projeto. Esse diretório deve se chamar “antlr4” e deve ter a mesma estrutura de diretórios que os pacotes Java. A figura a seguir ilustra o local exato onde deve ser criado o arquivo. Observe que no NetBeans é necessário alternar para a aba “arquivos/files” (topo da imagem):
 
 ![Estrutura de pastas no NetBeans](./imagens/topico2.image2.png)
 
@@ -825,6 +921,9 @@ Variavel	:	Letra(Letra|Digito)* { System.out.print("[Var,"+getText()+"]");};
 4. Mandar gerar o reconhecedor
 - Basta clicar com o botão direito no projeto e selecionar a opção “Build/Construir”. Será gerada uma nova pasta de código-fonte, chamada “Generated sources (antlr4)”, onde o código gerado terá a estrutura correta de pacotes.
 - Caso exista algum erro no arquivo da gramática, o processo irá gerar um erro. Observar na janela de “Saída/output” para identificar a origem do erro.
+- Caso não esteja usando NetBeans, basta executar o comando: `mvn package`
+
+Obs: IMPORTANTE, na versão 4.12 do antlr, pode existir um problema de compilação causado por diretórios que começam com a letra "u". Pode gerar um erro do tipo "illegal unicode character". Se isso acontecer, mude a versão para uma anterior.
 
 5. Criar a classe br.ufscar.dc.compiladores.compilador.alguma.Principal:
 
@@ -948,7 +1047,13 @@ CADEIA	: '\'' .* '\''
 		;
 ```
 
-- Mostrar que ele gera warning
+- Mostrar que ele gera warning. Pode ser necessário limpar e gerar os fontes de novo:
+
+```sh
+mvn clean
+mvn generate-sources
+```
+
 - Modificar o arquivo de entrada, para ter uma cadeia
 
 ```
