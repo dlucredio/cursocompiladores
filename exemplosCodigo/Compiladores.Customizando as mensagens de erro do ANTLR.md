@@ -49,7 +49,7 @@ FECHAPAR:	')'
 	;
 
 + CADEIA_NAO_FECHADA: '\'' (ESC_SEQ | ~('\n'|'\''|'\\'))* '\n';
-+ ERRO: .;```
++ ERRO: .;
 ```
 
 Note como a regra de cadeia não fechada é uma cadeia igual à correta, porém no final não tem aspas, e sim a quebra de linha, o que não deveria acontecer.
