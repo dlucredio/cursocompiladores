@@ -1,7 +1,7 @@
 # Construção de Compiladores - Daniel Lucrédio, Helena Caseli, Mário César San Felice e Murilo Naldi
 ## Customizando as mensagens de erro do ANTLR
 
-O parser gerado pelo ANTLR, por default, imprime as saídas no console. Então, quando acontece algum erro sintático, ele imprime uma mensagem padrão. Para o T2, vocês vão ter que customizar essas mensagens. Este documento explica a estratégia para conseguir isso.
+O parser gerado pelo ANTLR, por default, imprime as saídas no console. Então, quando acontece algum erro sintático, ele imprime uma mensagem padrão. Para o T1 e T2, vocês vão ter que customizar essas mensagens. Este documento explica a estratégia para conseguir isso.
 
 O primeiro passo é criar uma classe para receber as notificações de erros gerados pelo parser. Basta criar uma classe nova, que implementa a interface [ANTLRErrorListener](https://www.antlr.org/api/Java/org/antlr/v4/runtime/ANTLRErrorListener.html).
 
@@ -40,7 +40,15 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
 }
 ```
 
-Agora precisamos registrar essa classe como um listener para o parser. Tem que ser feito depois de criar o parser, mas antes de chamar a regra inicial, assim:
+Agora precisamos registrar essa classe como um listener para o lexer ou parser. Tem que ser feito depois de criar o lexer ou parser. Se for no caso do lexer, fica assim:
+
+```java
+CharStream cs = CharStreams.fromFileName(args[0]);
+AlgumaLexer lexer = new AlgumaLexer(cs);
+MyCustomErrorListener mcel = new MyCustomErrorListener();
+lexer.addErrorListener(mcel);
+```
+No caso do parser, fica assim:
 
 ```java
 CharStream cs = CharStreams.fromFileName(args[0]);
@@ -48,14 +56,13 @@ AlgumaLexer lexer = new AlgumaLexer(cs);
 CommonTokenStream tokens = new CommonTokenStream(lexer);
 AlgumaParser parser = new AlgumaParser(tokens);
 
-// Registrar o error lister personalizado aqui
 MyCustomErrorListener mcel = new MyCustomErrorListener();
 parser.addErrorListener(mcel);
 
 parser.programa();
 ```
 
-Agora, o parser tem DOIS error listeners registrados: o default, e o nosso customizado (```mcel```). Por causa disso, você vai ver mensagens duplicadas no console quando executar. Se quiser remover o default e deixar só o nosso, basta chamar ```parser.removeErrorListeners()``` antes de adicionar o nosso.
+Fazendo isso, o lexer/parser tem DOIS error listeners registrados: o default, e o nosso customizado (```mcel```). Por causa disso, você vai ver mensagens duplicadas no console quando executar. Se quiser remover o default e deixar só o nosso, basta chamar ```parser.removeErrorListeners()``` antes de adicionar o nosso.
 
 Finalmente, precisamos fazer o error listener imprimir as mensagens no arquivo de saída, e não no console. Tem várias formas de fazer isso. Uma delas é passar um objeto do tipo ```PrintWriter``` para o nosso error listener, via construtor. Assim:
 
@@ -100,7 +107,7 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
 }
 ```
 
-Agora, na criação do parser, precisamos criar esse ```PrintWriter``` e passar para nosso listener:
+Agora, na criação do lexer/parser, precisamos criar esse ```PrintWriter``` e passar para nosso listener. No caso do parser, fica assim (no lexer é a mesma coisa):
 
 ```diff
 + // Lembrando: args[1] é o arquivo de saída
