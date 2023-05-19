@@ -3,6 +3,104 @@
 
 O parser gerado pelo ANTLR, por default, imprime as saídas no console. Então, quando acontece algum erro sintático, ele imprime uma mensagem padrão. Para o T1 e T2, vocês vão ter que customizar essas mensagens. Este documento explica a estratégia para conseguir isso.
 
+### Erros léxicos (T1)
+
+Para o T1 (customizando erro léxico), o jeito mais fácil é criar regras "erradas" para capturar os erros como se fossem tokens reais. Assim, na gramática, você pode fazer o seguinte:
+
+```diff
+lexer grammar AlgumaLexer;
+
+PALAVRA_CHAVE:
+    'DECLARACOES' | 'ALGORITMO' | 'INT' | 'REAL' | 'ATRIBUIR' | 'A' | 'LER' | 'IMPRIMIR' | 'SE' | 'ENTAO' | 'ENQUANTO' | 'INICIO' | 'FIM' | 'E' | 'OU';
+
+fragment
+DIGITO: '0'..'9';
+
+NUMINT:
+    ('+'|'-')? DIGITO+;
+
+NUMREAL:
+    ('+'|'-')? DIGITO+ '.' DIGITO+;
+
+VARIAVEL:
+    [a-zA-Z][a-zA-Z0-0]*;
+
+CADEIA:
+    '\'' (ESC_SEQ | ~('\n'|'\''|'\\'))* '\'';
+
+fragment
+ESC_SEQ:
+    '\\\'';
+
+COMENTARIO:
+    '%' ~('\n'|'\r')* '\r'? '\n' { skip(); };
+
+WS: (' '|'\t'|'\r'|'\n') { skip(); };
+
+OP_REL	:	'>' | '>=' | '<' | '<=' | '<>' | '='
+	;
+OP_ARIT	:	'+' | '-' | '*' | '/'
+	;
+DELIM	:	':'
+	;
+ABREPAR :	'('
+	;
+FECHAPAR:	')'
+	;
+
++ CADEIA_NAO_FECHADA: '\'' (ESC_SEQ | ~('\n'|'\''|'\\'))* '\n';
++ ERRO: .;```
+```
+
+Note como a regra de cadeia não fechada é uma cadeia igual à correta, porém no final não tem aspas, e sim a quebra de linha, o que não deveria acontecer.
+
+E note como, no final, existe uma regra genérica, chamada ERRO, que captura tudo (`.` é um coringa).
+
+Dessa forma, o ANTLR nunca irá acusar erro, pois, na pior das hipóteses, a regra ERRO irá capturar tudo.
+
+Para reportar o erro como exigido no T1, basta configurar o código principal para imprimir a mensagem e interromper a execução, com esperado. Algo mais ou menos assim:
+
+
+```diff
+package br.ufscar.dc.compiladores.alguma.lexico;
+
+import java.io.IOException;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.Token;
+
+public class Principal {
+    public static void main(String args[]) {
+
+        try {
+            CharStream cs = CharStreams.fromFileName(args[0]);
+            AlgumaLexer lex = new AlgumaLexer(cs);
+
+            Token t = null;
+            while ((t = lex.nextToken()).getType() != Token.EOF) {
+                String nomeToken = AlgumaLexer.VOCABULARY.getDisplayName(t.getType());
+
++                if(nomeToken.equals("ERRO")) {
++                    System.out.println("Erro na linha "+t.getLine()+": "+t.getText());
++                    break;
++                } else if(nomeToken.equals("CADEIA_NAO_FECHADA")) {
++                    System.out.println("Cadeia não fechada na linha "+t.getLine());
++                    break;
++                } else {
+                    System.out.println("<" + nomeToken + "," + t.getText() + ">");
++                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+### Erros sintáticos (T2)
+
 O primeiro passo é criar uma classe para receber as notificações de erros gerados pelo parser. Basta criar uma classe nova, que implementa a interface [ANTLRErrorListener](https://www.antlr.org/api/Java/org/antlr/v4/runtime/ANTLRErrorListener.html).
 
 ```java
@@ -40,15 +138,8 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
 }
 ```
 
-Agora precisamos registrar essa classe como um listener para o lexer ou parser. Tem que ser feito depois de criar o lexer ou parser. Se for no caso do lexer, fica assim:
+Agora precisamos registrar essa classe como um listener para o parser. Tem que ser feito depois de criar o parser. Fica assim:
 
-```java
-CharStream cs = CharStreams.fromFileName(args[0]);
-AlgumaLexer lexer = new AlgumaLexer(cs);
-MyCustomErrorListener mcel = new MyCustomErrorListener();
-lexer.addErrorListener(mcel);
-```
-No caso do parser, fica assim:
 
 ```java
 CharStream cs = CharStreams.fromFileName(args[0]);
@@ -62,7 +153,7 @@ parser.addErrorListener(mcel);
 parser.programa();
 ```
 
-Fazendo isso, o lexer/parser tem DOIS error listeners registrados: o default, e o nosso customizado (```mcel```). Por causa disso, você vai ver mensagens duplicadas no console quando executar. Se quiser remover o default e deixar só o nosso, basta chamar ```parser.removeErrorListeners()``` antes de adicionar o nosso.
+Fazendo isso, o parser tem DOIS error listeners registrados: o default e o nosso customizado (```mcel```). Por causa disso, você vai ver mensagens duplicadas no console quando executar. Se quiser remover o default e deixar só o nosso, basta chamar ```parser.removeErrorListeners()``` antes de adicionar o nosso.
 
 Finalmente, precisamos fazer o error listener imprimir as mensagens no arquivo de saída, e não no console. Tem várias formas de fazer isso. Uma delas é passar um objeto do tipo ```PrintWriter``` para o nosso error listener, via construtor. Assim:
 
@@ -107,7 +198,7 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
 }
 ```
 
-Agora, na criação do lexer/parser, precisamos criar esse ```PrintWriter``` e passar para nosso listener. No caso do parser, fica assim (no lexer é a mesma coisa):
+Agora, na criação do parser, precisamos criar esse ```PrintWriter``` e passar para nosso listener. No caso do parser, fica assim:
 
 ```diff
 + // Lembrando: args[1] é o arquivo de saída
