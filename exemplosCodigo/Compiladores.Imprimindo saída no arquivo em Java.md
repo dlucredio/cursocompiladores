@@ -1,5 +1,5 @@
 # Construção de Compiladores - Daniel Lucrédio, Helena Caseli, Mário César San Felice e Murilo Naldi
-## Customizando as mensagens de erro do ANTLR
+## Imprimindo saída no arquivo em Java
 
 Para os trabalhos, vocês precisarão salvar a saída em um arquivo especificado pelo usuário (conforme especificações dos trabalhos). Existem várias formas de se fazer isso. Em Java, pode ser assim:
 
