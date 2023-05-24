@@ -11,8 +11,8 @@ Primeira tentativa de fazer análise léxica: lendo tokens de 1 caractere (ou no
 
 ```
 :DECLARACOES
-argumento:INT
-fatorial:INT
+argumento:INTEIRO
+fatorial:INTEIRO
 
 :ALGORITMO
 % Calcula o fatorial de um número inteiro
@@ -37,22 +37,24 @@ mvn archetype:generate "-DarchetypeGroupId=org.apache.maven.archetypes" "-Darche
 3. Criar um enum TipoToken
 
 ```java
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
+
 public enum TipoToken {
     PCDeclaracoes, PCAlgoritmo, PCInteiro, PCReal, PCAtribuir, PCA, PCLer,
-    PCImprimir, PCSe, PCEntao, PCEnquanto, PCInicio, PCFim,
+    PCImprimir, PCSe, PCEntao, PCSenao, PCEnquanto, PCInicio, PCFim,
     OpAritMult, OpAritDiv, OpAritSoma, OpAritSub,
     OpRelMenor, OpRelMenorIgual, OpRelMaiorIgual,
     OpRelMaior, OpRelIgual, OpRelDif,
     OpBoolE, OpBoolOu,
     Delim, AbrePar, FechaPar, Var, NumInt, NumReal, Cadeia, Fim
 }
+
 ```
 
 4. Criar a classe Token
 
 ```java
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
 public class Token {
     public TipoToken nome;
     public String lexema;
@@ -71,7 +73,7 @@ public class Token {
 5. Criar a classe LeitorDeArquivosTexto
 
 ```java
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -101,7 +103,7 @@ public class LeitorDeArquivosTexto {
 6. Criar a classe AlgumaLexico
 
 ```java
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
 
 public class AlgumaLexico {
     LeitorDeArquivosTexto ldat;
@@ -122,7 +124,7 @@ public class AlgumaLexico {
 7. Criar a classe App, com o seguinte código no main() e executar
 
 ```java
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
 
 public class App {
     public static void main(String[] args) {
@@ -148,7 +150,7 @@ java -jar "/Users/daniellucredio/NetBeansProjects/AlgumaLex/dist/AlgumaLex.jar" 
 - Caso tenha criado o projeto no Maven, para rodar basta executar o seguinte comando:
 
 ```sh
-mvn exec:java "-Dexec.mainClass=br.ufscar.dc.algumalex.App" "-Dexec.args=C:\Users\dlucr\OneDrive\Desktop\entrada.txt"
+mvn exec:java "-Dexec.mainClass=br.ufscar.dc.compiladores.algumalex.App" "-Dexec.args=C:\Users\dlucr\OneDrive\Desktop\entrada.txt"
 ```
 
 8. Adicionar na classe AlgumaLexico o código para os tokens com um único caractere e executar
@@ -311,7 +313,7 @@ Possibilitar a análise de diversos padrões “em cascata”
 2. Na classe LeitorDeArquivosTexto, fazer as seguintes modificações
 
 ```diff
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -442,7 +444,7 @@ public class LeitorDeArquivosTexto {
 3. Criar o seguinte código na classe AlgumaLexico (deixar o método proximoToken por último)
 
 ```java
-package br.ufscar.dc.algumalex;
+package br.ufscar.dc.compiladores.algumalex;
 
 public class AlgumaLexico {
     LeitorDeArquivosTexto ldat;
@@ -695,7 +697,7 @@ public class AlgumaLexico {
                     return new Token(TipoToken.PCDeclaracoes, lexema);
                 } else if (lexema.equals("ALGORITMO")) {
                     return new Token(TipoToken.PCAlgoritmo, lexema);
-                } else if (lexema.equals("INT")) {
+                } else if (lexema.equals("INTEIRO")) {
                     return new Token(TipoToken.PCInteiro, lexema);
                 } else if (lexema.equals("REAL")) {
                     return new Token(TipoToken.PCReal, lexema);
@@ -970,7 +972,7 @@ java -jar /Users/daniellucredio/NetBeansProjects/alguma-lexico/target/alguma-lex
 lexer grammar AlgumaLexer;
 
 PALAVRA_CHAVE 
-	:	'DECLARACOES' | 'ALGORITMO' | 'INT' | 'REAL' | 'ATRIBUIR' | 'A' | 'LER' | 'IMPRIMIR' | 'SE' | 'ENTAO' 
+	:	'DECLARACOES' | 'ALGORITMO' | 'INTEIRO' | 'REAL' | 'ATRIBUIR' | 'A' | 'LER' | 'IMPRIMIR' | 'SE' | 'ENTAO' 
 	| 'ENQUANTO' | 'INICIO' | 'FIM' | 'E' | 'OU' 
 	; 
 NUMINT	: ('+'|'-')?('0'..'9')+

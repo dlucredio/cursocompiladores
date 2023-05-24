@@ -44,7 +44,21 @@ IMPRIMIR numero3
 2. Abrir o NetBeans, e abrir projeto Java “AlgumaLex”
 3. Criar novo projeto Java (com Ant) “AlgumaParser”
 4. Adicionar dependência do “AlgumaParser” para o “AlgumaLex”
-5. Criar um arquivo com a gramática
+
+4.1. Alternativamente aos passos 2, 3 e 4, criar um projeto usando Maven, executando o seguinte comando:
+
+```sh
+mvn archetype:generate "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.4"
+
+Define value for property 'groupId': br.ufscar.dc.compiladores
+Define value for property 'artifactId': AlgumaParser
+Define value for property 'version' 1.0-SNAPSHOT: :
+Define value for property 'package' br.ufscar.dc.compiladores: : br.ufscar.dc.compiladores.algumaparser
+```
+
+4.2. Copiar a pasta `br/ufscar/dc/compiladores/algumalex` para este projeto (mesma pasta `src/main/java`).
+
+5. Criar um arquivo texto com a gramática
 
 ```
 programa : ':' 'DECLARACOES' listaDeclaracoes ':' 'ALGORITMO' listaComandos;
@@ -67,14 +81,14 @@ comandoRepeticao : 'ENQUANTO' expressaoRelacional comando;
 subAlgoritmo : 'INICIO' listaComandos 'FIM';
 ```
 
-6. Criar uma classe algumaparser.AlgumaParser
+6. Criar uma classe `br.ufscar.dc.compiladores.algumaparser.AlgumaParser`:
 
 ```java
-package algumaparser;
+package br.ufscar.dc.compiladores.algumaparser;
 
-import algumalex.AlgumaLexico;
-import algumalex.TipoToken;
-import algumalex.Token;
+import br.ufscar.dc.compiladores.algumalex.AlgumaLexico;
+import br.ufscar.dc.compiladores.algumalex.TipoToken;
+import br.ufscar.dc.compiladores.algumalex.Token;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -437,6 +451,10 @@ public class AlgumaParser {
 9. Criar a classe algumaparser.Principal
 
 ```java
+package br.ufscar.dc.compiladores.algumaparser;
+
+import br.ufscar.dc.compiladores.algumalex.AlgumaLexico;
+
 public class Principal {
     public static void main(String args[]) {
         AlgumaLexico lex = new AlgumaLexico(args[0]);
@@ -446,76 +464,148 @@ public class Principal {
 }
 ```
 10. Compilar e testar
+10.1. Para rodar no Maven, executar o seguinte comando:
+
+```sh
+mvn clean compile exec:java "-Dexec.mainClass=br.ufscar.dc.compiladores.algumaparser.Principal" "-Dexec.args=C:\Users\dlucr\OneDrive\Desktop\programa.txt"
+```
 
 ### Demonstração 2 – Analisador sintático preditivo de descendência recursiva – ANTLR
 ---
 
 1. Mostrar o site do ANTLR (www.antlr.org). Nesta demonstração faremos a instalação pelo Maven
 2. Abrir o NetBeans e criar novo projeto Java Maven
-- Project name: ```alguma-sintatico```
-- Group Id: ```br.ufscar.dc.compiladores```
+
+- Alternativamente, executar o seguinte comando: `mvn archetype:generate "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.4"`
+
+- Project name: `alguma-sintatico`
+- Group Id: `br.ufscar.dc.compiladores`
+- Package name: `br.ufscar.dc.compiladores.alguma.sintatico`
 - Modificar o arquivo pom.xml para incluir a dependência para o ANTLR e o plugin do ANTLR
 
-```xml
+```diff
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>br.ufscar.dc.compiladores</groupId>
     <artifactId>alguma-sintatico</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+
+    <name>alguma-sintatico</name>
+    <!-- FIXME change it to the project's website -->
+    <url>http://www.example.com</url>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.7.2</version>
-                <executions>
-                    <execution>
-                        <id>antlr</id>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>            
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-<mainClass>br.ufscar.dc.compiladores.alguma.sintatico.Principal</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+
     <dependencies>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>4.7.2</version>
-            <classifier>complete</classifier>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
-    </dependencies>    
++        <dependency>
++            <groupId>org.antlr</groupId>
++            <artifactId>antlr4</artifactId>
++            <version>4.11.1</version>
++            <classifier>complete</classifier>
++        </dependency>
+    </dependencies>
+
+    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.antlr</groupId>
++                <artifactId>antlr4-maven-plugin</artifactId>
++                <version>4.11.1</version>
++                <executions>
++                    <execution>
++                        <id>antlr</id>
++                        <goals>
++                            <goal>antlr4</goal>
++                        </goals>
++                    </execution>
++                </executions>
++            </plugin>
++            <plugin>
++                <artifactId>maven-assembly-plugin</artifactId>
++                <configuration>
++                    <archive>
++                        <manifest>
++                            <mainClass>br.ufscar.dc.compiladores.alguma.sintatico.Principal</mainClass>
++                        </manifest>
++                    </archive>
++                    <descriptorRefs>
++                        <descriptorRef>jar-with-dependencies</descriptorRef>
++                    </descriptorRefs>
++                </configuration>
++                <executions>
++                    <execution>
++                        <id>make-assembly</id>
++                        <phase>package</phase>
++                        <goals>
++                            <goal>single</goal>
++                        </goals>
++                    </execution>
++                </executions>
++            </plugin>
++        </plugins>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be
+            moved to parent pom) -->
+            <plugins>
+                <!-- clean lifecycle, see
+                https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <!-- default lifecycle, jar packaging: see
+                https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <!-- site lifecycle, see
+                https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
 ```
 
@@ -659,6 +749,8 @@ subAlgoritmo
 4. Mandar gerar o reconhecedor
 - Basta clicar com o botão direito no projeto e selecionar a opção “Build/Construir”. Será gerada uma nova pasta de código-fonte, chamada “Generated sources (antlr4)”, onde o código gerado terá a estrutura correta de pacotes.
 - Caso exista algum erro no arquivo da gramática, o processo irá gerar um erro. Observar na janela de “Saída/output” para identificar a origem do erro.
+- Alternativamente, executar o comando: `mvn generate-sources`
+
 5. Criar a classe Principal:
 
 ```java
@@ -687,7 +779,7 @@ public class Principal {
 }
 ```
 
-6. Executar (vai dar erro na expressão booleana)
+6. Construir e executar: `mvn package`
 - Construir o projeto novamente. Devido às configurações do arquivo pom.xml, será gerado na pasta “target” um arquivo .jar com todas as dependências necessárias para execução (incluindo o runtime do antlr)
 - Para executar, abrir um terminal e executar o comando (tudo em uma linha só, não esquecer de substituir os caminhos deste exemplo pelos reais)
 
