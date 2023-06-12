@@ -32,21 +32,60 @@ IMPRIMIR 'O resultado é:'
 IMPRIMIR resultado
 ```
 
-2. Criar um novo projeto Java Maven no NetBeans
+2. Criar um novo projeto Java Maven
+
+`mvn archetype:generate "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.4"`
+
 - Project name: ```alguma-gerador```
 - Group Id: ```br.ufscar.dc.compiladores```
+- Package: ```br.ufscar.dc.compiladores.alguma.gerador```
 - Modificar o arquivo pom.xml para incluir a dependência para o ANTLR e o plugin do ANTLR
+
+OBS: neste exemplo, olhe como a versão do código fonte é a 16. Nas anteriores, era 1.7
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-...
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.ufscar.dc.compiladores</groupId>
+    <artifactId>alguma-gerador</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>alguma-gerador</name>
+    <!-- FIXME change it to the project's website -->
+    <url>http://www.example.com</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.11.1</version>
+            <classifier>complete</classifier>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.7.2</version>
+                <version>4.11.1</version>
                 <configuration>
                     <visitor>true</visitor>
                 </configuration>
@@ -58,13 +97,13 @@ IMPRIMIR resultado
                         </goals>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-<mainClass>br.ufscar.dc.compiladores.alguma.gerador.Principal</mainClass>
+                            <mainClass>br.ufscar.dc.compiladores.alguma.gerador.Principal</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -82,15 +121,54 @@ IMPRIMIR resultado
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be
+            moved to parent pom) -->
+            <plugins>
+                <!-- clean lifecycle, see
+                https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <!-- default lifecycle, jar packaging: see
+                https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <!-- site lifecycle, see
+                https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
-    <dependencies>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>4.7.2</version>
-            <classifier>complete</classifier>
-        </dependency>
-    </dependencies>      
 </project>
 ```
 
@@ -162,7 +240,7 @@ public class TabelaDeSimbolos {
             this.nome = nome;
             this.tipo = tipo;
         }
-  `  }
+    }
     
     private final Map<String, EntradaTabelaDeSimbolos> tabela;
     
@@ -598,7 +676,7 @@ gcc ~/Desktop/saida.c -> irá gerar o arquivo a.out
 ### Demonstração 2 - Ambiente de execução P-código e Gerando P-código a partir da linguagem Alguma
 ---
 
-1. Rodar a máquina P-código (baixar do site o arquivo ```pcodemachine-executable.zip``` e descompactar):
+1. Rodar a [máquina P-código](https://github.com/dlucredio/cursocompiladores/tree/master/pCodeMachine):
 
 - Executar em um terminal, dentro da pasta descompactada:
 
