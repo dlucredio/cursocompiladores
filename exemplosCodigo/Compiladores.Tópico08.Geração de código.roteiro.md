@@ -1156,24 +1156,24 @@ OpBool	 : 'E' | 'OU';
 5. Criar o seguinte conteúdo no arquivo ```br.ufscar.dc.compiladores.alguma.generator.AlgumaGenerator.xtend```
 
 ```
-package br.ufscar.dc.alguma.generator
+package br.ufscar.dc.compiladores.alguma.generator
 
-import br.ufscar.dc.alguma.alguma.ComandoAtribuicao
-import br.ufscar.dc.alguma.alguma.ComandoCondicao
-import br.ufscar.dc.alguma.alguma.ComandoEntrada
-import br.ufscar.dc.alguma.alguma.ComandoRepeticao
-import br.ufscar.dc.alguma.alguma.ComandoSaida
-import br.ufscar.dc.alguma.alguma.Declaracao
-import br.ufscar.dc.alguma.alguma.ExpressaoAritmetica
-import br.ufscar.dc.alguma.alguma.ExpressaoRelacional
-import br.ufscar.dc.alguma.alguma.FatorNumero
-import br.ufscar.dc.alguma.alguma.FatorSubExpressao
-import br.ufscar.dc.alguma.alguma.FatorVariavel
-import br.ufscar.dc.alguma.alguma.Programa
-import br.ufscar.dc.alguma.alguma.SubAlgoritmo
-import br.ufscar.dc.alguma.alguma.TermoAritmetico
-import br.ufscar.dc.alguma.alguma.TermoComparacaoRelacional
-import br.ufscar.dc.alguma.alguma.TermoSubExpressaoRelacional
+import br.ufscar.dc.compiladores.alguma.alguma.ComandoCondicao
+import br.ufscar.dc.compiladores.alguma.alguma.ComandoEntrada
+import br.ufscar.dc.compiladores.alguma.alguma.ComandoAtribuicao
+import br.ufscar.dc.compiladores.alguma.alguma.ComandoRepeticao
+import br.ufscar.dc.compiladores.alguma.alguma.ComandoSaida
+import br.ufscar.dc.compiladores.alguma.alguma.Declaracao
+import br.ufscar.dc.compiladores.alguma.alguma.ExpressaoAritmetica
+import br.ufscar.dc.compiladores.alguma.alguma.ExpressaoRelacional
+import br.ufscar.dc.compiladores.alguma.alguma.FatorNumero
+import br.ufscar.dc.compiladores.alguma.alguma.FatorSubExpressao
+import br.ufscar.dc.compiladores.alguma.alguma.FatorVariavel
+import br.ufscar.dc.compiladores.alguma.alguma.Programa
+import br.ufscar.dc.compiladores.alguma.alguma.SubAlgoritmo
+import br.ufscar.dc.compiladores.alguma.alguma.TermoAritmetico
+import br.ufscar.dc.compiladores.alguma.alguma.TermoComparacaoRelacional
+import br.ufscar.dc.compiladores.alguma.alguma.TermoSubExpressaoRelacional
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtend2.lib.StringConcatenation
 import org.eclipse.xtext.generator.AbstractGenerator
@@ -1184,22 +1184,25 @@ class AlgumaGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (e : resource.allContents.toIterable.filter(Programa)) {
-			fsa.generateFile("Programa.java", e.compilePrograma)
+			fsa.generateFile("gen/Programa.java", e.compilePrograma)
 		}
 	}
 
 	def compilePrograma(Programa p) '''
-		public class Programa {
-			«FOR d : p.declaracoes»
-				static «getTipo(d)» «d.name»;
+	package gen;
+	
+	public class Programa {
+
+	«FOR d : p.declaracoes»
+		static «getTipo(d)» «d.name»;
+	«ENDFOR»
+
+		public static void main(String args[]) {
+			«FOR c : p.comandos»
+				«c.compileComando»
 			«ENDFOR»
-			
-			public static void main(String args[]) {
-				«FOR c : p.comandos»
-					«c.compileComando»
-				«ENDFOR»
-			}
 		}
+	}
 	'''
 
 	def getTipo(Declaracao d) {
@@ -1305,7 +1308,7 @@ class AlgumaGenerator extends AbstractGenerator {
 - Navegar até a pasta do projeto, subpasta "bin", e executar o comando Java
 
 ```sh
-java -cp . Programa
+java -cp . gen.Programa
 ```
 
 10. Vamos agora fazer um gerador de código utilizando Xtext e Xbase
@@ -1370,7 +1373,7 @@ class Alguma2JvmModelInferrer extends AbstractModelInferrer {
 15. Para executar, clicar com o botão direito no projeto principal Xtext e executar "Launch Eclipse Runtime"
 - Cuidado para que o ambiente lançado tenha a mesma versão em "Execution Environment" (deixar a versão mais recente)
 16. Na nova instância do Eclipse, criar um novo projeto Java (ou utilizar o mesmo projeto que o exemplo anterior)
--  Neste projeto novo, adicionar a biblioteca Xtend ao "Build path"
+-  Neste projeto novo, adicionar a biblioteca Xtend ao "Build path" (Botão "Add Library" em "Classpath")
 17. Criar um novo arquivo, com a extensão .alg2, e digitar o seguinte programa na linguagem Alguma. Ao salvar, será gerado o código na pasta "src-gen"
 
 ```
